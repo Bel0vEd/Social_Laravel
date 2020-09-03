@@ -15,14 +15,28 @@ use Illuminate\Support\Facades\Auth;
 Auth::routes();
 
 Route::get('/', function () {
-    return view('welcome');
+        return view("welcome");
+});
+
+Route::get('/profile', function()
+{
+    if (Auth::user() != null) {
+        return redirect()->action('ProfileController@index', ['id' => Auth::user()->id]);
+    }
+    else{
+        return view("welcome");
+    }
 });
 
 Route::get('/profile/{id}', 'ProfileController@index');
 
-Route::match(['get', 'post'], '/addComment/{userPageId}', 'CommentController@form');
+Route::match(['get', 'post'], '/addComment/{userPageId}', 'CommentController@addComment');
 
+Route::get('/deleteAllComments', 'CommentController@deleteAllComments');
 
+Route::get('/deleteComment/{idComment}/{idPageRefrash}', 'CommentController@deleteComment');
+
+Route::get('/loadMoreComments/{lastCommentNum}/{idUserPage}', 'CommentController@loadMoreComments');
 // Route::get('/home/{name?}', function ($name) {
 //     echo $name;
 //   });
